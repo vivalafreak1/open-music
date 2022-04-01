@@ -35,7 +35,12 @@ const AuthenticationsService = require('./services/postgres/AuthenticationsServi
 const TokenManager = require('./tokenize/TokenManager');
 const AuthenticationsValidator = require('./validator/authentications');
 
-const ClientError = require('./exceptions/ClientError');
+// Exports
+const _exports = require('./api/exports');
+const ProducerService = require('./services/rabbitmq/ProducerService');
+const ExportsValidator = require('./validator/exports');
+
+//const ClientError = require('./exceptions/ClientError');
 
 const init = async () => {
     const albumsService = new AlbumsService();
@@ -124,6 +129,13 @@ const init = async () => {
               playlistsService: playlistsService,
               songsService: songsService,
               validator: PlaylistSongValidator,
+            },
+          },
+          {
+            plugin: _exports,
+            options: {
+              service: ProducerService,
+              validator: ExportsValidator,
             },
           },
     ]);
