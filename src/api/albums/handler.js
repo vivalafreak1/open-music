@@ -3,14 +3,17 @@ const { response } = require("@hapi/hapi/lib/validation");
 const ClientError = require("../../exceptions/ClientError");
 
 class AlbumsHandler {
-    constructor(service, validator) {
+    constructor(service, validator, storageService, uploadValidator) {
         this._service = service;
         this._validator = validator;
-
+        this._storageService = storageService;
+        this._uploadValidator = uploadValidator;
+        
         this.postAlbumHandler = this.postAlbumHandler.bind(this);
         this.getAlbumByIdHandler = this.getAlbumByIdHandler.bind(this);
         this.putAlbumByIdHandler = this.putAlbumByIdHandler.bind(this);
         this.deleteAlbumByIdHandler = this.deleteAlbumByIdHandler.bind(this);
+        this.postAlbumCoverHandler = this.postAlbumCoverHandler.bind(this);
     }
 
     async postAlbumHandler(request, h) {
@@ -138,6 +141,43 @@ class AlbumsHandler {
             const response = h.response({
                 status: 'error',
                 message: 'Maaf, terjadi kagagalan pada server kami.',
+            });
+            response.code(500);
+            console.error(error);
+            return response;
+        }
+    }
+
+    //Album Cover
+    async postAlbumCoverHandler(request, h){
+        try{
+            const { cover } = request.payload;
+            this._uploadValidator.validateImageHeaders(cover.hapi.headers);
+
+            const filename = await this._service.writeFile(data, data.hapi);
+            const { id } = request.params;
+            const path = `http://${process.env.HOST}:${process.env.PORT}/albums/images/${filename}`;
+            await this._service.addAlbumCover(id, path);
+            const response = h.response({
+                status: 'success',
+                message: 'Sampul berhasil diunggah',
+            });
+            response.code(201);
+            return response;
+        } catch(error){
+            if(error instanceof ClientError){
+                const response = h.response({
+                    status: 'fail',
+                    message: error.message,
+                });
+                response.code(error.statusCode);
+                return response;
+            }
+
+            //SERVER ERROR!
+            const response = h.response({
+                status: 'error',
+                message: 'Maaf, terjadi kegagalan pada server kami.',
             });
             response.code(500);
             console.error(error);
