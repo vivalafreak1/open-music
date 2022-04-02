@@ -160,7 +160,7 @@ class AlbumsHandler {
 
             const filename = await this._service.writeFile(cover, cover.hapi);
             const path = `http://${process.env.HOST}:${process.env.PORT}/upload/images/${filename}`;
-            await this._service.addAlbumCover(id,  path );
+            await this._service.addAlbumCover(id, path);
             const response = h.response({
                 status: 'success',
                 message: 'Sampul berhasil diunggah',
