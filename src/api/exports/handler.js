@@ -17,7 +17,7 @@ class ExportsHandler{
             const playlistId = request.params.playlistId;
 
             //validasi pemilik
-            await this._playlistsService.getPlaylistDetails(playlistId);
+            await this._playlistsService.getPlaylists(playlistId);
             await this._playlistsService.verifyPlaylistOwner(playlistId, userId);
 
             const message = {

@@ -1,13 +1,15 @@
 const { Pool } = require('pg');
 const InvariantError = require('../../exceptions/InvariantError');
 const { nanoid } = require('nanoid');
-const notFoundError = require('../../exceptions/NotFoundError');
 const AuthorizationError = require('../../exceptions/AuthorizationError');
 const NotFoundError = require('../../exceptions/NotFoundError');
 
 class PlaylistsService{
-    constructor() {
+    constructor(playlistSongService, songService, cacheService) {
         this._pool = new Pool();
+        this._playlistSongService = playlistSongService;
+        this._songService = songService;
+        this._cacheService = cacheService;
     }
 
     async addPlaylist({ name, owner }){

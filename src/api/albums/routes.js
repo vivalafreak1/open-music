@@ -37,13 +37,27 @@ const routes = (handler) => [
     },
     {
         method: 'GET',
-        path: '/albums/{param*}',
+        path: '/upload/{param*}',
         handler: {
             directory: {
                 path: path.resolve(__dirname, 'file'),
             },
         },
     },
+    // Album likes
+    {
+        method: 'POST',
+        path: '/albums/{id}/likes',
+        handler: handler.postAlbumLikeHandler,
+        options: {
+            auth: 'openmusicapp_jwt',
+        },
+    },
+    {
+        method: 'GET',
+        path: '/albums/{id}/likes',
+        handler: handler.getAlbumLikeHandler,
+    }
 ];
 
 module.exports = routes;

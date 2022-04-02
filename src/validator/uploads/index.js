@@ -5,7 +5,7 @@ const UploadsValidator = {
     validateImageHeaders: (headers) => {
         const validationResult = ImageAlbumsCoverSchema.validate(headers);
 
-        if(!validationResult.error){
+        if(validationResult.error){
             throw new InvariantError(validationResult.error.message);
         }
     },
