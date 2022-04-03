@@ -158,7 +158,7 @@ class AlbumsHandler {
 
             this._uploadValidator.validateImageHeaders(cover.hapi.headers);
 
-            const filename = await this._service.writeFile(cover, cover.hapi);
+            const filename = await this._storageService.writeFile(cover, cover.hapi);
             const path = `http://${process.env.HOST}:${process.env.PORT}/upload/images/${filename}`;
             await this._service.addAlbumCover(id, path);
             const response = h.response({
