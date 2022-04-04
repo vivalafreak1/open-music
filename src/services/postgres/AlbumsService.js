@@ -124,7 +124,7 @@ class AlbumsService {
         } catch(error){
             //Jika cache gak ada
             const query = {
-                text: 'SELECT userid FROM userslikealbum WHERE albumid = $1',
+                text: 'SELECT * FROM userslikealbum WHERE albumid = $1',
                 values: [albumId],
             };
             const result = await this._pool.query(query);
