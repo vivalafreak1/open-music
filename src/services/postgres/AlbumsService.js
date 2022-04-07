@@ -128,14 +128,14 @@ class AlbumsService {
                 values: [albumId],
             };
             const result = await this._pool.query(query);
-            const likesCount = result.rowCount;
+            const likes = result.rowCount;
 
             //Simpan di cache
             await this._cacheService.set(
                 `likes:${albumId}`,
-                likesCount,
+                likes,
             );
-            return { likes: likesCount };
+            return { likes };
         }
     }
 }
